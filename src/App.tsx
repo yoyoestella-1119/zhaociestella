@@ -16,6 +16,7 @@ import { PrdDocModal } from './components/PrdDocModal';
 import { UserProfileModal } from './components/UserProfileModal';
 import { ComparisonModal } from './components/ComparisonModal';
 import { ComparisonTray } from './components/ComparisonTray';
+import { InvestPitchModal } from './components/InvestPitchModal';
 import {
   ChatMessage,
   RequirementProfile,
@@ -58,6 +59,19 @@ export default function App() {
   const [isCatalogOpen, setIsCatalogOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [isComparisonOpen, setIsComparisonOpen] = useState<boolean>(false);
+  const [isInvestOpen, setIsInvestOpen] = useState<boolean>(false);
+
+  // 监听 URL #invest 锚点 (支持直接带 hash 打开小红书投资评审视窗)
+  useEffect(() => {
+    const handleCheckHash = () => {
+      if (window.location.hash.toLowerCase().includes('invest')) {
+        setIsInvestOpen(true);
+      }
+    };
+    handleCheckHash();
+    window.addEventListener('hashchange', handleCheckHash);
+    return () => window.removeEventListener('hashchange', handleCheckHash);
+  }, []);
 
   // 初始化加载一个真实的开箱即用体验场景：夏天地铁通勤防闷 (千元内)
   useEffect(() => {
@@ -266,6 +280,10 @@ export default function App() {
             onOpenProfile={() => setIsProfileOpen(true)}
             onOpenComparison={() => setIsComparisonOpen(true)}
             comparisonCount={comparisonItems.length}
+            onOpenInvest={() => {
+              setIsInvestOpen(true);
+              window.location.hash = 'invest';
+            }}
             onResetChat={handleResetChat}
             visualizerOpen={visualizerOpen}
             onToggleVisualizer={() => setVisualizerOpen(!visualizerOpen)}
@@ -343,6 +361,16 @@ export default function App() {
             onRemoveItem={handleRemoveCompareItem}
             onClearAll={handleClearCompareAll}
             onOpenCatalogToAdd={() => setIsCatalogOpen(true)}
+          />
+
+          <InvestPitchModal
+            isOpen={isInvestOpen}
+            onClose={() => {
+              setIsInvestOpen(false);
+              if (window.location.hash.toLowerCase().includes('invest')) {
+                window.history.replaceState ? window.history.replaceState(null, '', window.location.pathname) : (window.location.hash = '');
+              }
+            }}
           />
         </div>
       </AntdApp>

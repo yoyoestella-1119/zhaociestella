@@ -15,7 +15,8 @@ import {
   ReloadOutlined,
   AppstoreOutlined,
   ThunderboltOutlined,
-  ApiOutlined
+  ApiOutlined,
+  FundOutlined
 } from '@ant-design/icons';
 
 const { Header: AntHeader } = Layout;
@@ -27,6 +28,7 @@ interface HeaderProps {
   onOpenProfile: () => void;
   onOpenComparison: () => void;
   comparisonCount: number;
+  onOpenInvest?: () => void;
   onResetChat: () => void;
   visualizerOpen: boolean;
   onToggleVisualizer: () => void;
@@ -41,6 +43,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenProfile,
   onOpenComparison,
   comparisonCount,
+  onOpenInvest,
   onResetChat,
   visualizerOpen,
   onToggleVisualizer,
@@ -184,6 +187,25 @@ export const Header: React.FC<HeaderProps> = ({
         >
           产品说明 PRD
         </Button>
+
+        {/* Invest Review (#invest) */}
+        {onOpenInvest && (
+          <Tooltip title="小红书协作/投资评审视角：商业化模式、单位经济学与动态 ROI 测算">
+            <Button
+              size="middle"
+              icon={<FundOutlined style={{ color: '#34d399' }} />}
+              onClick={onOpenInvest}
+              style={{
+                background: '#064e3b',
+                borderColor: '#059669',
+                color: '#ecfdf5',
+                fontWeight: 600
+              }}
+            >
+              投资评审 (#invest)
+            </Button>
+          </Tooltip>
+        )}
 
         {/* Reset */}
         <Tooltip title="清空对话并重置画像">
